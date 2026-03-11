@@ -482,11 +482,16 @@ footer {
 }
 .footer-logo { display:flex; align-items:center; justify-content:center; gap:9px; margin-bottom:1.2rem; }
 .footer-logo-icon {
-  width:28px; height:28px; border-radius:6px;
-  background:linear-gradient(135deg, var(--blue), var(--blue-dark));
+  width:40px; height:40px;
+  background: none;
   display:flex; align-items:center; justify-content:center;
-  font-family:var(--font-head); font-weight:900; font-size:12px; color:white;
+  flex-shrink:0;
 }
+.footer-logo-icon img {
+  width:40px; height:40px;
+  object-fit:contain;
+}
+
 .footer-logo-text { font-family:var(--font-head); font-weight:700; font-size:14px; color:rgba(255,255,255,0.55); }
 .footer-links { display:flex; justify-content:center; gap:2.2rem; margin-bottom:1.6rem; flex-wrap:wrap; }
 .footer-link {
@@ -905,7 +910,9 @@ footer {
 <!-- ── FOOTER ──────────────────────────────────────────────────────────── -->
 <footer>
   <div class="footer-logo">
-    <div class="footer-logo-icon"></div>
+    <div class="footer-logo-icon">
+      <img src="logo.png" alt="LvlUp Trading" />
+    </div>
     <div class="footer-logo-text">LVLUP Trading</div>
   </div>
   <div class="footer-links">
