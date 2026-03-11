@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LvlUp Trading — Analiză Profesională de Strategii</title>
+<meta name="description" content="Transformă-ți datele de trading în edge real. Analiză completă, Monte Carlo, Risk Management și export PDF profesional." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+
+<style>
+/* ── RESET & BASE ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:        #050810;
+  --bg2:       #0a0e1a;
+  --card:      rgba(255,255,255,0.025);
+  --card2:     rgba(56,182,255,0.05);
+  --border:    rgba(56,182,255,0.1);
+  --border2:   rgba(56,182,255,0.22);
+  --blue:      #38b6ff;
+  --blue-dark: #0066cc;
+  --green:     #00e5a0;
+  --text:      #e6edf3;
+  --muted:     rgba(255,255,255,0.42);
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  cursor: default;
+}
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(56,182,255,0.25); border-radius: 2px; }
+
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: var(--font-body); }
+input, textarea { font-family: var(--font-body); }
+
+/* ── ANIMATIONS ───────────────────────────────────────────────────────── */
+@keyframes fadeUp   { from { opacity:0; transform:translateY(36px); } to { opacity:1; transform:none; } }
+@keyframes fadeDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:none; } }
+@keyframes glow     { 0%,100%{box-shadow:0 0 24px rgba(56,182,255,0.3);} 50%{box-shadow:0 0 48px rgba(56,182,255,0.6);} }
+@keyframes pulse    { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+@keyframes bounce   { 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(10px);} }
+@keyframes scanline { from{top:-100%} to{top:100%} }
+@keyframes floatUp  { from{opacity:0;transform:translateY(50px);} to{opacity:1;transform:none;} }
+@keyframes spin     { to{transform:rotate(360deg);} }
+
+/* scroll-reveal class */
+.reveal {
+  opacity: 0;
+  transform: translateY(44px);
+  transition: opacity 0.75s cubic-bezier(.22,1,.36,1), transform 0.75s cubic-bezier(.22,1,.36,1);
+}
+.reveal.visible { opacity:1; transform:none; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ── GRID OVERLAY ─────────────────────────────────────────────────────── */
+#grid-overlay {
+  position: fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(56,182,255,0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,182,255,0.028) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* ── PARTICLE CANVAS ──────────────────────────────────────────────────── */
+#particles { position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.65; }
+
+/* ── NAV ──────────────────────────────────────────────────────────────── */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:200;
+  height: 68px;
+  display: flex; align-items:center; justify-content:space-between;
+  padding: 0 2.5rem;
+  transition: background 0.4s, backdrop-filter 0.4s, border-bottom 0.4s;
+}
+nav.scrolled {
+  background: rgba(5,8,16,0.9);
+  backdrop-filter: blur(22px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  display: flex; align-items:center; gap:10px; cursor:pointer;
+  user-select:none;
+}
+.nav-logo-icon {
+  width:36px; height:36px; border-radius:9px;
+  background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-head); font-weight:900; font-size:14px; color:white;
+  box-shadow: 0 0 18px rgba(56,182,255,0.4);
+  flex-shrink:0;
+}
+.nav-logo-text {
+  font-family:var(--font-head); font-weight:800; font-size:17px; color:white;
+}
+.nav-logo-text span { color:var(--blue); }
+.nav-links { display:flex; align-items:center; gap:2.2rem; }
+.nav-link {
+  background:none; border:none;
+  font-family:var(--font-body); font-size:14px; font-weight:500;
+  color: var(--muted);
+  transition: color 0.2s;
+  padding: 4px 0;
+  border-bottom: 1px solid transparent;
+  letter-spacing: 0.2px;
+}
+.nav-link:hover, .nav-link.active { color:var(--blue); border-bottom-color:var(--blue); }
+.nav-cta {
+  background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+  border:none; border-radius:9px;
+  padding: 9px 22px;
+  font-family:var(--font-head); font-size:13px; font-weight:700; color:white;
+  box-shadow: 0 0 20px rgba(56,182,255,0.28);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.nav-cta:hover { transform:translateY(-2px); box-shadow:0 6px 32px rgba(56,182,255,0.5); }
+
+/* ── PAGES ────────────────────────────────────────────────────────────── */
+.page { display:none; min-height:100vh; padding-top:68px; position:relative; z-index:1; }
+.page.active { display:block; animation: floatUp 0.45s cubic-bezier(.22,1,.36,1) both; }
+
+/* ── HERO ─────────────────────────────────────────────────────────────── */
+.hero {
+  min-height: calc(100vh - 68px);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center;
+  padding: 4rem 2rem 6rem;
+  position:relative;
+}
+.hero-glow {
+  position:absolute; top:40%; left:50%; transform:translate(-50%,-50%);
+  width:700px; height:700px; border-radius:50%;
+  background: radial-gradient(circle, rgba(56,182,255,0.07) 0%, transparent 65%);
+  pointer-events:none;
+}
+.hero-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background: rgba(56,182,255,0.07); border:1px solid var(--border2);
+  border-radius:100px; padding:6px 16px; margin-bottom:1.8rem;
+  animation: fadeDown 0.6s ease both;
+}
+.hero-badge-dot {
+  width:6px; height:6px; border-radius:50%; background:var(--blue);
+  animation: pulse 2s infinite;
+}
+.hero-badge-text {
+  font-size:11px; color:var(--blue); letter-spacing:1.2px;
+  text-transform:uppercase; font-weight:600;
+}
+.hero-title {
+  font-family:var(--font-head);
+  font-size: clamp(2.8rem, 7.5vw, 5.8rem);
+  font-weight:900; line-height:1.04;
+  color:white; margin:0 0 1.4rem;
+  animation: fadeUp 0.7s ease 0.1s both;
+  max-width:860px;
+  letter-spacing:-1px;
+}
+.hero-title .grad-blue {
+  background: linear-gradient(135deg, var(--blue) 0%, #7dd3fc 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.hero-title .grad-green {
+  background: linear-gradient(135deg, var(--green) 0%, var(--blue) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.hero-sub {
+  font-size: clamp(1rem, 2vw, 1.18rem);
+  color: var(--muted); max-width:560px; line-height:1.75;
+  margin:0 0 2.6rem;
+  animation: fadeUp 0.7s ease 0.2s both;
+}
+.hero-btns {
+  display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;
+  animation: fadeUp 0.7s ease 0.3s both;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+  border:none; border-radius:12px;
+  padding:15px 34px;
+  font-family:var(--font-head); font-size:15px; font-weight:700; color:white;
+  box-shadow: 0 0 32px rgba(56,182,255,0.32);
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: glow 3s infinite;
+}
+.btn-primary:hover { transform:translateY(-3px); box-shadow:0 10px 48px rgba(56,182,255,0.55); animation:none; }
+.btn-ghost {
+  background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.11);
+  border-radius:12px; padding:15px 34px;
+  font-family:var(--font-body); font-size:15px; font-weight:500; color:rgba(255,255,255,0.78);
+  transition: background 0.2s, border-color 0.2s;
+}
+.btn-ghost:hover { background:rgba(255,255,255,0.08); border-color:var(--border2); }
+.scroll-indicator {
+  position:absolute; bottom:2.2rem; left:50%;
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  animation: bounce 2.2s infinite;
+}
+.scroll-indicator span {
+  font-size:10px; color:rgba(255,255,255,0.22); letter-spacing:1.5px;
+}
+.scroll-line {
+  width:1px; height:44px;
+  background:linear-gradient(to bottom, rgba(56,182,255,0.55), transparent);
+}
+
+/* ── SECTION GENERIC ─────────────────────────────────────────────────── */
+.section { padding: 5.5rem 2rem; }
+.section-inner { max-width:1100px; margin:0 auto; }
+.section-tag {
+  display:inline-block;
+  background: rgba(56,182,255,0.06); border:1px solid var(--border2);
+  border-radius:100px; padding:4px 14px; margin-bottom:1.1rem;
+  font-size:11px; color:var(--blue); letter-spacing:1.5px; text-transform:uppercase; font-weight:600;
+}
+.section-title {
+  font-family:var(--font-head); font-size:clamp(1.8rem, 4vw, 2.9rem);
+  font-weight:800; color:white; line-height:1.1; margin:0 0 0.9rem;
+}
+.section-title span { color:var(--blue); }
+.section-sub {
+  font-size:15px; color:var(--muted); line-height:1.72; max-width:480px;
+}
+
+/* ── STATS BAND ───────────────────────────────────────────────────────── */
+.stats-band {
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
+  background: var(--card2); border:1px solid var(--border);
+  border-radius:20px; overflow:hidden; gap:1px;
+}
+.stat-cell {
+  padding:2.4rem 2rem; text-align:center;
+  background: rgba(5,8,16,0.65);
+  border-right:1px solid var(--border);
+  transition: background 0.3s;
+}
+.stat-cell:last-child { border-right:none; }
+.stat-cell:hover { background: rgba(56,182,255,0.04); }
+.stat-num {
+  font-family:var(--font-head); font-size:3rem; font-weight:900;
+  color:var(--blue); line-height:1; margin-bottom:6px;
+}
+.stat-label { font-size:13px; color:rgba(255,255,255,0.38); letter-spacing:0.4px; }
+
+/* ── FEATURE GRID ─────────────────────────────────────────────────────── */
+.feature-grid {
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr));
+  gap:1.5px; background: var(--card2);
+  border-radius:20px; overflow:hidden; border:1px solid var(--border);
+}
+.feature-card {
+  padding:2.2rem; background:rgba(5,8,16,0.75);
+  transition: background 0.3s;
+}
+.feature-card:hover { background:rgba(56,182,255,0.05); }
+.feature-icon { font-size:26px; margin-bottom:0.9rem; }
+.feature-title {
+  font-family:var(--font-head); font-weight:700; font-size:17px;
+  color:white; margin:0 0 0.5rem;
+}
+.feature-desc { font-size:13.5px; color:var(--muted); line-height:1.72; }
+
+/* ── STEPS ────────────────────────────────────────────────────────────── */
+.steps { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:2rem; }
+.step { text-align:center; padding:1.5rem; }
+.step-num {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:54px; height:54px; border-radius:50%;
+  background:rgba(56,182,255,0.09); border:1px solid var(--border2);
+  font-family:var(--font-head); font-weight:900; font-size:13px; color:var(--blue);
+  margin-bottom:1.1rem;
+}
+.step-title { font-family:var(--font-head); font-weight:700; font-size:16px; color:white; margin:0 0 0.5rem; }
+.step-desc { font-size:13px; color:var(--muted); line-height:1.7; }
+
+/* ── TESTIMONIALS ─────────────────────────────────────────────────────── */
+.testi-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:1.5rem; }
+.testi-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:18px; padding:2rem;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.testi-card:hover { border-color:var(--border2); transform:translateY(-5px); }
+.testi-stars { margin-bottom:1rem; }
+.testi-star { color:var(--blue); font-size:14px; }
+.testi-text {
+  font-size:14px; line-height:1.78; color:rgba(255,255,255,0.6);
+  font-style:italic; margin:0 0 1.5rem;
+}
+.testi-name { font-family:var(--font-head); font-weight:700; font-size:14px; color:white; }
+.testi-role { font-size:12px; color:var(--blue); margin-top:3px; }
+
+/* ── CTA BLOCK ────────────────────────────────────────────────────────── */
+.cta-block {
+  max-width:700px; margin:0 auto; text-align:center;
+  background: linear-gradient(135deg, rgba(56,182,255,0.06), rgba(0,102,204,0.05));
+  border:1px solid var(--border2); border-radius:26px;
+  padding:4.5rem 2rem; position:relative; overflow:hidden;
+}
+.cta-block::before {
+  content:''; position:absolute; top:-100px; right:-100px;
+  width:320px; height:320px; border-radius:50%;
+  background:radial-gradient(circle, rgba(56,182,255,0.09) 0%, transparent 70%);
+  pointer-events:none;
+}
+.cta-title {
+  font-family:var(--font-head); font-size:clamp(1.9rem, 4vw, 2.6rem);
+  font-weight:900; color:white; margin:0 0 1rem;
+}
+.cta-sub { font-size:15px; color:var(--muted); margin:0 0 2.2rem; line-height:1.7; }
+
+/* ── ABOUT PAGE ───────────────────────────────────────────────────────── */
+.about-hero { padding:6rem 2rem 2rem; text-align:center; max-width:900px; margin:0 auto; }
+.about-cards { display:grid; grid-template-columns:1fr 1fr; gap:2.5rem; max-width:1000px; margin:0 auto; }
+.about-card {
+  border-radius:20px; padding:2.8rem;
+  transition: transform 0.3s;
+}
+.about-card:hover { transform:translateY(-4px); }
+.about-card.blue-card {
+  background:linear-gradient(135deg, rgba(56,182,255,0.07), rgba(0,102,204,0.04));
+  border:1px solid rgba(56,182,255,0.12);
+}
+.about-card.green-card {
+  background:linear-gradient(135deg, rgba(0,229,160,0.05), rgba(56,182,255,0.04));
+  border:1px solid rgba(0,229,160,0.12);
+}
+.about-card-title { font-family:var(--font-head); font-weight:800; font-size:22px; color:white; margin:0 0 1rem; }
+.about-card-text { font-size:15px; color:var(--muted); line-height:1.8; }
+.values-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:1.4rem; }
+.value-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:1.9rem;
+  transition: all 0.3s;
+}
+.value-card:hover { background:rgba(56,182,255,0.04); border-color:var(--border2); }
+.value-icon { font-size:26px; margin-bottom:0.8rem; }
+.value-title { font-family:var(--font-head); font-weight:700; font-size:16px; color:white; margin:0 0 0.5rem; }
+.value-desc { font-size:13px; color:var(--muted); line-height:1.7; }
+.team-placeholder {
+  max-width:800px; margin:3rem auto;
+  background:rgba(56,182,255,0.04); border:1px dashed var(--border2);
+  border-radius:20px; padding:3rem; text-align:center;
+}
+
+/* ── APP PAGE ─────────────────────────────────────────────────────────── */
+.app-launch-wrap {
+  min-height: calc(100vh - 68px);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding: 4rem 2rem; text-align:center; position:relative;
+}
+.app-launch-card {
+  max-width: 680px; width:100%;
+  background: linear-gradient(135deg, rgba(56,182,255,0.07), rgba(0,102,204,0.05));
+  border:1px solid var(--border2); border-radius:28px;
+  padding: 4rem 3rem; position:relative; overflow:hidden;
+}
+.app-launch-card::before {
+  content:''; position:absolute; top:-120px; right:-120px;
+  width:380px; height:380px; border-radius:50%;
+  background:radial-gradient(circle, rgba(56,182,255,0.1) 0%, transparent 70%);
+  pointer-events:none;
+}
+.app-launch-card::after {
+  content:''; position:absolute; bottom:-80px; left:-80px;
+  width:280px; height:280px; border-radius:50%;
+  background:radial-gradient(circle, rgba(0,229,160,0.06) 0%, transparent 70%);
+  pointer-events:none;
+}
+.app-launch-icon {
+  font-size:64px; margin-bottom:1.5rem;
+  display:inline-block;
+  animation: floatIcon 3s ease-in-out infinite;
+}
+@keyframes floatIcon {
+  0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);}
+}
+.app-launch-title {
+  font-family:var(--font-head); font-size:clamp(2rem,5vw,3rem);
+  font-weight:900; color:white; margin:0 0 1rem; line-height:1.1;
+}
+.app-launch-title span { color:var(--blue); }
+.app-launch-sub {
+  font-size:16px; color:var(--muted); line-height:1.75;
+  margin:0 0 2.5rem; max-width:480px; margin-left:auto; margin-right:auto;
+}
+.app-launch-btn {
+  display:inline-flex; align-items:center; gap:10px;
+  background:linear-gradient(135deg, var(--blue), var(--blue-dark));
+  border:none; border-radius:14px; padding:16px 40px;
+  font-family:var(--font-head); font-size:16px; font-weight:700; color:white;
+  box-shadow: 0 0 40px rgba(56,182,255,0.35);
+  transition: all 0.25s; cursor:pointer;
+  text-decoration:none;
+  animation: glow 3s infinite;
+}
+.app-launch-btn:hover {
+  transform:translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 50px rgba(56,182,255,0.55);
+  animation:none;
+}
+.app-launch-btn .btn-arrow {
+  display:inline-block; transition:transform 0.2s;
+}
+.app-launch-btn:hover .btn-arrow { transform:translateX(4px); }
+.app-features-mini {
+  display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap;
+  margin-top:2.5rem; padding-top:2rem;
+  border-top:1px solid rgba(56,182,255,0.1);
+}
+.app-feature-mini {
+  display:flex; align-items:center; gap:7px;
+  font-size:13px; color:rgba(255,255,255,0.45);
+}
+.app-feature-mini .dot { width:5px; height:5px; border-radius:50%; background:var(--green); flex-shrink:0; }
+
+/* ── CONTACT PAGE ─────────────────────────────────────────────────────── */
+.contact-grid { display:grid; grid-template-columns:1fr 1.4fr; gap:3.5rem; align-items:start; max-width:1000px; margin:0 auto; }
+.social-cards { display:flex; flex-direction:column; gap:0.9rem; }
+.social-card {
+  display:flex; align-items:center; gap:1rem;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:13px; padding:1rem 1.3rem;
+  transition: all 0.2s;
+}
+.social-card:hover { background:rgba(56,182,255,0.05); border-color:var(--border2); }
+.social-icon { font-size:20px; flex-shrink:0; }
+.social-label { font-size:11px; color:rgba(255,255,255,0.32); letter-spacing:0.5px; margin-bottom:2px; }
+.social-value { font-size:13.5px; color:rgba(255,255,255,0.8); font-weight:500; }
+.contact-form-wrap {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:22px; padding:2.6rem;
+}
+.form-section-title { font-family:var(--font-head); font-weight:700; font-size:18px; color:white; margin:0 0 1.6rem; }
+.field-label {
+  display:block; font-size:11px; color:rgba(255,255,255,0.4);
+  letter-spacing:0.7px; text-transform:uppercase; margin-bottom:6px;
+}
+.field-input, .field-textarea {
+  width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(56,182,255,0.1);
+  border-radius:11px; padding:11px 15px;
+  font-size:14px; color:var(--text); outline:none;
+  transition: border-color 0.2s;
+  margin-bottom:1.2rem;
+}
+.field-input:focus, .field-textarea:focus { border-color:rgba(56,182,255,0.4); }
+.field-textarea { resize:vertical; min-height:130px; }
+.field-input::placeholder, .field-textarea::placeholder { color:rgba(255,255,255,0.2); }
+.submit-btn {
+  width:100%;
+  background:linear-gradient(135deg, var(--blue), var(--blue-dark));
+  border:none; border-radius:11px; padding:13px;
+  font-family:var(--font-head); font-size:14px; font-weight:700; color:white;
+  box-shadow:0 0 24px rgba(56,182,255,0.22);
+  transition: all 0.2s;
+}
+.submit-btn:hover { transform:translateY(-2px); box-shadow:0 8px 36px rgba(56,182,255,0.45); }
+.form-success { text-align:center; padding:2rem 0; display:none; }
+.form-success.show { display:block; }
+.form-fields.hide { display:none; }
+
+/* ── FOOTER ───────────────────────────────────────────────────────────── */
+footer {
+  border-top:1px solid var(--border); padding:3rem 2rem;
+  text-align:center; position:relative; z-index:1;
+}
+.footer-logo { display:flex; align-items:center; justify-content:center; gap:9px; margin-bottom:1.2rem; }
+.footer-logo-icon {
+  width:28px; height:28px; border-radius:6px;
+  background:linear-gradient(135deg, var(--blue), var(--blue-dark));
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-head); font-weight:900; font-size:12px; color:white;
+}
+.footer-logo-text { font-family:var(--font-head); font-weight:700; font-size:14px; color:rgba(255,255,255,0.55); }
+.footer-links { display:flex; justify-content:center; gap:2.2rem; margin-bottom:1.6rem; flex-wrap:wrap; }
+.footer-link {
+  background:none; border:none;
+  font-size:13px; color:rgba(255,255,255,0.3);
+  transition:color 0.2s;
+}
+.footer-link:hover { color:var(--blue); }
+.footer-copy { font-size:12px; color:rgba(255,255,255,0.18); }
+
+/* ── RESPONSIVE ───────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .nav-links { display:none; }
+  .about-cards { grid-template-columns:1fr; }
+  .contact-grid { grid-template-columns:1fr; }
+  nav { padding:0 1.2rem; }
+  .section { padding:4rem 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── BACKGROUNDS ────────────────────────────────────────────────────── -->
+<div id="grid-overlay"></div>
+<canvas id="particles"></canvas>
+
+<!-- ── NAV ────────────────────────────────────────────────────────────── -->
+<nav id="navbar">
+  <div class="nav-logo" onclick="showPage('home')">
+    <div class="nav-logo-icon">LU</div>
+    <div class="nav-logo-text">LvlUp <span>Trading</span></div>
+  </div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showPage('home')" data-page="home">Acasă</button>
+    <button class="nav-link" onclick="showPage('about')" data-page="about">Despre Noi</button>
+    <button class="nav-link" onclick="showPage('app')" data-page="app">Testează Strategia</button>
+    <button class="nav-link" onclick="showPage('contact')" data-page="contact">Contact</button>
+    <button class="nav-cta" onclick="showPage('app')">Start Gratuit →</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     PAGE: HOME
+══════════════════════════════════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      <span class="hero-badge-text">Platform Analiză Trading</span>
+    </div>
+    <h1 class="hero-title">
+      Transformă-ți
+      <span class="grad-blue"> Datele</span>
+      &nbsp;în
+      <span class="grad-green"> Edge</span>
+    </h1>
+    <p class="hero-sub">
+      Importă istoricul tău de trade-uri din TradingView și descoperă exact
+      când, cum și de ce câștigi — sau pierzi. Analiză profesională în câteva secunde.
+    </p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showPage('app')">🚀 Testează Gratuit</button>
+      <button class="btn-ghost" onclick="showPage('about')">Despre Noi →</button>
+    </div>
+    <div class="scroll-indicator">
+      <span>SCROLL</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="section">
+    <div class="section-inner">
+      <div class="stats-band reveal">
+        <div class="stat-cell">
+          <div class="stat-num" data-count="2400" data-suffix="+">0</div>
+          <div class="stat-label">Traderi Activi</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num" data-count="98" data-suffix="%">0</div>
+          <div class="stat-label">Acuratețe Date</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num" data-count="15000" data-suffix="+">0</div>
+          <div class="stat-label">Strategii Analizate</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num" data-count="49" data-suffix="/5" data-decimal="true">0</div>
+          <div class="stat-label">Rating Mediu</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="section">
+    <div class="section-inner">
+      <div style="text-align:center; margin-bottom:3rem;" class="reveal">
+        <div class="section-tag">Funcționalități</div>
+        <h2 class="section-title">Tot ce ai nevoie pentru a<br><span>înțelege</span> strategia ta</h2>
+        <p class="section-sub" style="margin:0 auto;">Analiză completă, vizualizări clare, recomandări acționabile.</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon">📊</div>
+          <div class="feature-title">Analiză Completă</div>
+          <div class="feature-desc">Statistici detaliate pe ore, minute, zile, luni și ani. Win rate, Profit Factor, R:R — tot ce ai nevoie.</div>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon">🎲</div>
+          <div class="feature-title">Monte Carlo</div>
+          <div class="feature-desc">Simulează mii de scenarii aleatorii bazate pe istoricul tău real. Testează robustețea strategiei.</div>
+        </div>
+        <div class="feature-card reveal reveal-delay-3">
+          <div class="feature-icon">💰</div>
+          <div class="feature-title">Risk Management</div>
+          <div class="feature-desc">Kelly Criterion, Fixed Fractional Risk, analiza drawdown. Gestionează riscul ca un profesionist.</div>
+        </div>
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon">📈</div>
+          <div class="feature-title">Payout Simulator</div>
+          <div class="feature-desc">Calculează câștigurile pe cicluri de payout pentru 1–10 conturi funded simultan.</div>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon">🔬</div>
+          <div class="feature-title">Analize Avansate</div>
+          <div class="feature-desc">Detectare overtrading, corelații între trade-uri, benchmark vs SPY Buy & Hold.</div>
+        </div>
+        <div class="feature-card reveal reveal-delay-3">
+          <div class="feature-icon">📄</div>
+          <div class="feature-title">Export PDF Dark</div>
+          <div class="feature-desc">Raport complet cu toate graficele și statisticile, pe fundal negru, gata de partajat.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section">
+    <div class="section-inner">
+      <div style="text-align:center; margin-bottom:3rem;" class="reveal">
+        <h2 class="section-title">3 pași simpli</h2>
+        <p class="section-sub" style="margin:0 auto;">De la date brute la insight-uri acționabile în mai puțin de un minut.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal reveal-delay-1">
+          <div class="step-num">01</div>
+          <div class="step-title">Exportă din TradingView</div>
+          <div class="step-desc">Descarcă fișierul XLSX cu istoricul tranzacțiilor tale direct din TradingView.</div>
+        </div>
+        <div class="step reveal reveal-delay-2">
+          <div class="step-num">02</div>
+          <div class="step-title">Importă în Platformă</div>
+          <div class="step-desc">Drag & drop fișierul în aplicație. Procesarea e instantanee, fără configurare.</div>
+        </div>
+        <div class="step reveal reveal-delay-3">
+          <div class="step-num">03</div>
+          <div class="step-title">Analizează & Optimizează</div>
+          <div class="step-desc">Explorează toate tab-urile, descoperă pattern-uri și exportă raportul PDF.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="section">
+    <div class="section-inner">
+      <div style="text-align:center; margin-bottom:3rem;" class="reveal">
+        <h2 class="section-title">Ce spun <span>traderii noștri</span></h2>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card reveal reveal-delay-1">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"Am reușit să-mi cresc win rate-ul cu 12% în 3 luni după ce am văzut exact la ce ore tranzacționez cel mai bine. Unealta asta e game changer."</p>
+          <div class="testi-name">Alexandru M.</div>
+          <div class="testi-role">Prop Trader — FTMO</div>
+        </div>
+        <div class="testi-card reveal reveal-delay-2">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"Simularea Monte Carlo m-a convins să reduc riscul per trade. Contul meu funded a supraviețuit o lună întreagă fără să ating daily DD-ul."</p>
+          <div class="testi-name">Raluca P.</div>
+          <div class="testi-role">Day Trader — Forex</div>
+        </div>
+        <div class="testi-card reveal reveal-delay-3">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"PDF-ul exportat e perfect pentru a prezenta performanța la firmele de prop trading. Arată extrem de profesional."</p>
+          <div class="testi-name">Mihai D.</div>
+          <div class="testi-role">Swing Trader</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA FINAL -->
+  <div class="section">
+    <div class="section-inner">
+      <div class="cta-block reveal">
+        <h2 class="cta-title">Gata să-ți înțelegi strategia?</h2>
+        <p class="cta-sub">Importă primul tău fișier gratuit și descoperă insight-uri pe care nu le știai.</p>
+        <button class="btn-primary" onclick="showPage('app')">🚀 Începe Analiza — Gratuit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     PAGE: ABOUT
+══════════════════════════════════════════════════════════════════════ -->
+<div id="page-about" class="page">
+  <div class="about-hero reveal">
+    <div class="section-tag">Despre Noi</div>
+    <h1 class="section-title" style="font-size:clamp(2rem,5vw,3.5rem); margin-bottom:1.5rem;">
+      Construiți de traderi,<br><span>pentru traderi</span>
+    </h1>
+    <p style="font-size:17px; color:var(--muted); line-height:1.8; max-width:620px; margin:0 auto;">
+      LvlUp Trading s-a născut dintr-o problemă reală: analiza manuală a sute de trade-uri
+      este lentă, obositoare și adesea inexactă. Am construit instrumentul pe care noi înșine
+      îl voiam — și l-am oferit comunității.
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="about-cards">
+      <div class="about-card blue-card reveal">
+        <h3 class="about-card-title">Misiunea noastră</h3>
+        <p class="about-card-text">Să democratizăm analiza profesională de trading. Instrumentele pe care le folosesc firmele mari de prop trading să fie accesibile oricărui trader independent, indiferent de experiență sau buget.</p>
+      </div>
+      <div class="about-card green-card reveal reveal-delay-2">
+        <h3 class="about-card-title">Viziunea noastră</h3>
+        <p class="about-card-text">Un ecosistem complet în care orice trader poate analiza, optimiza și scala strategia lui cu încredere — susținut de date reale, nu instincte.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-inner">
+      <div style="text-align:center; margin-bottom:2.5rem;" class="reveal">
+        <h2 class="section-title">Valorile noastre</h2>
+      </div>
+      <div class="values-grid">
+        <div class="value-card reveal reveal-delay-1">
+          <div class="value-icon">🎯</div>
+          <div class="value-title">Precizie</div>
+          <div class="value-desc">Fiecare statistică e calculată exact, fără aproximări. Datele tale merită acuratețe 100%.</div>
+        </div>
+        <div class="value-card reveal reveal-delay-2">
+          <div class="value-icon">🔒</div>
+          <div class="value-title">Privat</div>
+          <div class="value-desc">Datele tale rămân în browser. Nu stocăm niciun trade, nicio strategie, nicio informație personală.</div>
+        </div>
+        <div class="value-card reveal reveal-delay-3">
+          <div class="value-icon">⚡</div>
+          <div class="value-title">Viteză</div>
+          <div class="value-desc">Analiză completă în secunde, indiferent de câte mii de trade-uri ai în fișier.</div>
+        </div>
+        <div class="value-card reveal reveal-delay-4">
+          <div class="value-icon">🧠</div>
+          <div class="value-title">Inteligent</div>
+          <div class="value-desc">Algoritmi avansați: Monte Carlo, Kelly Criterion, detecție overtrading, corelații între trades.</div>
+        </div>
+      </div>
+
+      <div class="team-placeholder reveal" style="margin-top:4rem;">
+        <div style="font-size:42px; margin-bottom:1rem;">👥</div>
+        <h3 style="font-family:var(--font-head); font-weight:700; font-size:20px; color:white; margin:0 0 0.5rem;">Echipa LvlUp</h3>
+        <p style="font-size:14px; color:var(--muted);">Adaugă membrii echipei tale direct în codul HTML — secțiunea <code style="color:var(--blue);">team-placeholder</code>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     PAGE: APP
+══════════════════════════════════════════════════════════════════════ -->
+<div id="page-app" class="page">
+  <div class="app-launch-wrap">
+    <div class="app-launch-card reveal">
+      <div class="app-launch-icon">🚀</div>
+      <h1 class="app-launch-title">
+        Gata să-ți analizezi<br><span>strategia?</span>
+      </h1>
+      <p class="app-launch-sub">
+        Platforma noastră se deschide într-un tab nou. Importă fișierul XLSX
+        din TradingView și obții statistici complete în câteva secunde.
+      </p>
+
+      <!-- !! ÎNLOCUIEȘTE href cu link-ul tău real de pe streamlit.io !! -->
+      <a
+        class="app-launch-btn"
+        href="https://tradingview-app.streamlit.app"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Deschide Platforma
+        <span class="btn-arrow">→</span>
+      </a>
+
+      <div class="app-features-mini">
+        <div class="app-feature-mini"><span class="dot"></span> Import XLSX instant</div>
+        <div class="app-feature-mini"><span class="dot"></span> Monte Carlo & Risk Management</div>
+        <div class="app-feature-mini"><span class="dot"></span> Export PDF dark</div>
+        <div class="app-feature-mini"><span class="dot"></span> 100% gratuit</div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:2rem; margin-top:3rem; flex-wrap:wrap; justify-content:center;" class="reveal reveal-delay-2">
+      <div style="text-align:center; max-width:150px;">
+        <div style="font-size:28px; margin-bottom:0.5rem;">📥</div>
+        <div style="font-family:var(--font-head); font-size:13px; color:white; font-weight:700; margin-bottom:4px;">1. Exportă</div>
+        <div style="font-size:12px; color:var(--muted); line-height:1.5;">Descarcă XLSX din TradingView</div>
+      </div>
+      <div style="display:flex; align-items:center; color:rgba(56,182,255,0.3); font-size:22px; padding-bottom:20px;">→</div>
+      <div style="text-align:center; max-width:150px;">
+        <div style="font-size:28px; margin-bottom:0.5rem;">📂</div>
+        <div style="font-family:var(--font-head); font-size:13px; color:white; font-weight:700; margin-bottom:4px;">2. Importă</div>
+        <div style="font-size:12px; color:var(--muted); line-height:1.5;">Drag & drop în platformă</div>
+      </div>
+      <div style="display:flex; align-items:center; color:rgba(56,182,255,0.3); font-size:22px; padding-bottom:20px;">→</div>
+      <div style="text-align:center; max-width:150px;">
+        <div style="font-size:28px; margin-bottom:0.5rem;">📊</div>
+        <div style="font-family:var(--font-head); font-size:13px; color:white; font-weight:700; margin-bottom:4px;">3. Analizează</div>
+        <div style="font-size:12px; color:var(--muted); line-height:1.5;">Statistici complete instant</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     PAGE: CONTACT
+══════════════════════════════════════════════════════════════════════ -->
+<div id="page-contact" class="page">
+  <div style="padding:5rem 2rem;">
+    <div style="text-align:center; margin-bottom:4rem;" class="reveal">
+      <div class="section-tag">Contact</div>
+      <h1 class="section-title" style="font-size:clamp(2rem,5vw,3.2rem);">
+        Hai să <span>vorbim</span>
+      </h1>
+      <p style="font-size:16px; color:var(--muted); max-width:460px; margin:0 auto;">
+        Ai întrebări, sugestii sau vrei să colaborăm? Suntem aici.
+      </p>
+    </div>
+
+    <div class="contact-grid">
+      <!-- SOCIALS + TEAM -->
+      <div class="reveal">
+        <h3 style="font-family:var(--font-head); font-weight:700; font-size:18px; color:white; margin:0 0 1.4rem;">Găsește-ne pe</h3>
+        <div class="social-cards">
+          <div class="social-card">
+            <span class="social-icon">📧</span>
+            <div>
+              <div class="social-label">Email</div>
+              <div class="social-value">contact@lvluptrading.ro</div>
+            </div>
+          </div>
+          <div class="social-card">
+            <span class="social-icon">💬</span>
+            <div>
+              <div class="social-label">Discord</div>
+              <div class="social-value">discord.gg/lvluptrading</div>
+            </div>
+          </div>
+          <div class="social-card">
+            <span class="social-icon">📱</span>
+            <div>
+              <div class="social-label">Instagram</div>
+              <div class="social-value">@lvluptrading</div>
+            </div>
+          </div>
+          <div class="social-card">
+            <span class="social-icon">▶️</span>
+            <div>
+              <div class="social-label">YouTube</div>
+              <div class="social-value">LvlUp Trading</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TEAM SECTION — adaugă membrii tăi aici -->
+        <div class="team-placeholder" style="margin-top:2rem;">
+          <div style="font-size:30px; margin-bottom:0.6rem;">👥</div>
+          <p style="font-size:13px; color:var(--muted); line-height:1.65;">
+            <strong style="color:rgba(255,255,255,0.6);">Zona Echipă</strong><br>
+            Adaugă membrii echipei tale înlocuind acest bloc.
+          </p>
+        </div>
+      </div>
+
+      <!-- FORM -->
+      <div class="contact-form-wrap reveal reveal-delay-2">
+        <div class="form-fields" id="formFields">
+          <h3 class="form-section-title">Trimite un mesaj</h3>
+          <label class="field-label">Numele tău</label>
+          <input class="field-input" type="text" id="fname" placeholder="Ion Popescu" />
+          <label class="field-label">Email</label>
+          <input class="field-input" type="email" id="femail" placeholder="ion@email.com" />
+          <label class="field-label">Mesaj</label>
+          <textarea class="field-textarea" id="fmsg" placeholder="Scrie mesajul tău..."></textarea>
+          <button class="submit-btn" onclick="submitForm()">Trimite Mesajul →</button>
+        </div>
+        <div class="form-success" id="formSuccess">
+          <div style="font-size:52px; margin-bottom:1rem;">✅</div>
+          <h3 style="font-family:var(--font-head); color:var(--blue); font-weight:700; margin-bottom:0.5rem;">Mesaj trimis!</h3>
+          <p style="font-size:14px; color:var(--muted);">Îți vom răspunde în cel mai scurt timp.</p>
+          <button onclick="resetForm()" style="background:none; border:1px solid var(--border2); border-radius:8px; color:var(--blue); padding:8px 20px; margin-top:1rem; font-size:13px; font-family:var(--font-body);">Trimite alt mesaj</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ──────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-logo">
+    <div class="footer-logo-icon">LU</div>
+    <div class="footer-logo-text">LvlUp Trading</div>
+  </div>
+  <div class="footer-links">
+    <button class="footer-link" onclick="showPage('home')">Acasă</button>
+    <button class="footer-link" onclick="showPage('about')">Despre Noi</button>
+    <button class="footer-link" onclick="showPage('app')">Testează</button>
+    <button class="footer-link" onclick="showPage('contact')">Contact</button>
+  </div>
+  <div class="footer-copy">© 2025 LvlUp Trading. Toate drepturile rezervate.</div>
+</footer>
+
+<!-- ── JAVASCRIPT ──────────────────────────────────────────────────────── -->
+<script>
+// ── PARTICLES ──────────────────────────────────────────────────────────
+(function(){
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  for(let i=0;i<65;i++) particles.push({
+    x:Math.random()*W, y:Math.random()*H,
+    vx:(Math.random()-.5)*.28, vy:(Math.random()-.5)*.28,
+    r:Math.random()*1.4+.4, a:Math.random()*.35+.08
+  });
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0)p.x=W; if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(56,182,255,${p.a})`; ctx.fill();
+    });
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const d=Math.hypot(particles[i].x-particles[j].x, particles[i].y-particles[j].y);
+        if(d<115){
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle=`rgba(56,182,255,${.07*(1-d/115)})`;
+          ctx.lineWidth=.5; ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+// ── NAV SCROLL ──────────────────────────────────────────────────────────
+window.addEventListener('scroll', ()=>{
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// ── PAGE NAVIGATION ─────────────────────────────────────────────────────
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>{
+    p.classList.remove('active');
+  });
+  document.querySelectorAll('.nav-link').forEach(l=>{
+    l.classList.toggle('active', l.dataset.page === id);
+  });
+  const target = document.getElementById('page-'+id);
+  if(target) target.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  // Re-trigger reveal animations for newly visible page
+  setTimeout(triggerReveal, 50);
+}
+
+// ── SCROLL REVEAL ───────────────────────────────────────────────────────
+function triggerReveal(){
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, {threshold:0.12});
+  els.forEach(el=>{ io.observe(el); });
+}
+triggerReveal();
+
+// ── COUNTER ANIMATION ───────────────────────────────────────────────────
+function animateCounters(){
+  document.querySelectorAll('.stat-num[data-count]').forEach(el=>{
+    const target = parseInt(el.dataset.count);
+    const suffix = el.dataset.suffix || '';
+    const isDecimal = el.dataset.decimal === 'true';
+    let current = 0;
+    const duration = 1800;
+    const step = target / (duration / 16);
+    const timer = setInterval(()=>{
+      current += step;
+      if(current >= target){
+        current = target;
+        clearInterval(timer);
+      }
+      const display = isDecimal
+        ? (current/10).toFixed(1)
+        : Math.floor(current).toLocaleString();
+      el.textContent = display + suffix;
+    }, 16);
+    el.removeAttribute('data-count');
+  });
+}
+// Trigger counters when stats section visible
+const statsObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ animateCounters(); statsObs.disconnect(); }});
+},{threshold:0.3});
+const statsBand = document.querySelector('.stats-band');
+if(statsBand) statsObs.observe(statsBand);
+
+// ── FORM ────────────────────────────────────────────────────────────────
+function submitForm(){
+  const name = document.getElementById('fname').value.trim();
+  const email = document.getElementById('femail').value.trim();
+  const msg = document.getElementById('fmsg').value.trim();
+  if(!name || !email || !msg){ alert('Te rugăm completează toate câmpurile.'); return; }
+  document.getElementById('formFields').classList.add('hide');
+  document.getElementById('formSuccess').classList.add('show');
+}
+function resetForm(){
+  document.getElementById('fname').value='';
+  document.getElementById('femail').value='';
+  document.getElementById('fmsg').value='';
+  document.getElementById('formFields').classList.remove('hide');
+  document.getElementById('formSuccess').classList.remove('show');
+}
+</script>
+</body>
+</html>
