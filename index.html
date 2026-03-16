@@ -217,9 +217,63 @@ footer p{font-size:12px;color:var(--muted2);line-height:1.75;}
 .success-title{font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:10px;}
 .success-sub{font-size:14px;color:var(--muted);line-height:1.75;}
 .success-sub strong{color:var(--gold);}
+
+/* TICKER */
+.ticker-bar{background:var(--black2);border-bottom:1px solid var(--goldborder2);padding:10px 0;overflow:hidden;white-space:nowrap;}
+.ticker-track{display:inline-flex;gap:0;animation:ticker 32s linear infinite;}
+.ticker-track:hover{animation-play-state:paused;}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.tick-item{display:inline-flex;align-items:center;gap:8px;padding:0 36px;border-right:1px solid var(--goldborder2);font-size:12px;color:var(--muted);letter-spacing:.3px;}
+.tick-item .tick-name{color:var(--white2);font-weight:600;}
+.tick-item .tick-amount{color:var(--gold);font-weight:800;}
+.tick-item .tick-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.6;}
+.tick-item .tick-time{font-size:10px;color:var(--muted2);}
+
+/* GUARANTEE BADGE */
+.guarantee-strip{background:var(--black2);border-top:1px solid var(--goldborder2);border-bottom:1px solid var(--goldborder2);padding:28px 6%;display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap;}
+.g-item{display:flex;align-items:center;gap:14px;}
+.g-icon{width:44px;height:44px;border:1px solid var(--goldborder);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;color:var(--gold);}
+.g-title{font-size:14px;font-weight:700;color:var(--white);margin-bottom:2px;}
+.g-sub{font-size:12px;color:var(--muted);}
+
+/* NOT FOR YOU */
+.notforyou-section{background:var(--black);}
+.nfy-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:56px;background:var(--goldborder2);}
+@media(max-width:640px){.nfy-grid{grid-template-columns:1fr;}}
+.nfy-col{background:var(--black);padding:44px 40px;}
+.nfy-col.right{background:var(--black2);}
+.nfy-label{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:8px;}
+.nfy-label.no{color:#c0503a;}
+.nfy-label.yes{color:var(--gold);}
+.nfy-label::before{content:'';width:20px;height:1px;}
+.nfy-label.no::before{background:#c0503a;}
+.nfy-label.yes::before{background:var(--gold);}
+.nfy-list{list-style:none;display:flex;flex-direction:column;gap:14px;}
+.nfy-list li{font-size:14px;color:var(--white2);line-height:1.65;display:flex;gap:12px;align-items:flex-start;}
+.nfy-list li .ni{flex-shrink:0;font-size:13px;margin-top:1px;}
+.nfy-list.no li .ni{color:#c0503a;}
+.nfy-list.yes li .ni{color:var(--gold);}
+
+/* COUNTDOWN */
+.countdown-wrap{background:rgba(201,168,76,0.04);border:1px solid var(--goldborder);padding:20px 24px;margin-top:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.cd-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.cd-spots{font-size:15px;font-weight:700;color:var(--white);}
+.cd-spots span{color:var(--gold);}
+.cd-timer{display:flex;gap:12px;align-items:center;}
+.cd-unit{text-align:center;}
+.cd-num{font-size:28px;font-weight:800;color:var(--gold);line-height:1;font-family:'Plus Jakarta Sans',sans-serif;min-width:40px;}
+.cd-sep{font-size:22px;font-weight:300;color:var(--gold3);margin-bottom:10px;}
+.cd-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px;}
+.spots-bar{height:3px;background:var(--black4);margin-top:8px;width:160px;}
+.spots-fill{height:100%;background:var(--gold);width:30%;}
 </style>
 </head>
 <body>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-track" id="ticker-track"></div>
+</div>
 
 <nav>
   <div class="logo">BLACK<span> EDGE</span></div>
@@ -249,6 +303,26 @@ footer p{font-size:12px;color:var(--muted2);line-height:1.75;}
 <!-- STATS -->
 <div class="stats-bar">
   <div class="stat"><div class="stat-val">9+</div><div class="stat-label">Ani de date testate</div></div>
+<!-- GUARANTEE STRIP -->
+<div class="guarantee-strip">
+  <div class="g-item">
+    <div class="g-icon">↩</div>
+    <div><div class="g-title">Garanție 7 zile</div><div class="g-sub">Banii înapoi, fără nicio întrebare</div></div>
+  </div>
+  <div class="g-item">
+    <div class="g-icon">✓</div>
+    <div><div class="g-title">Testat pe 9+ ani de date</div><div class="g-sub">Backtesting real, nu simulări</div></div>
+  </div>
+  <div class="g-item">
+    <div class="g-icon">◎</div>
+    <div><div class="g-title">Mentenanță zilnică</div><div class="g-sub">Strategia adaptată zi de zi la piață</div></div>
+  </div>
+  <div class="g-item">
+    <div class="g-icon">⚡</div>
+    <div><div class="g-title">Acces în 5 minute</div><div class="g-sub">Activare imediată după confirmare</div></div>
+  </div>
+</div>
+
   <div class="stat"><div class="stat-val">$250K+</div><div class="stat-label">Capital gestionat</div></div>
   <div class="stat"><div class="stat-val">5+</div><div class="stat-label">Firme finanțate</div></div>
   <div class="stat"><div class="stat-val">4.9★</div><div class="stat-label">Rating utilizatori</div></div>
@@ -336,6 +410,38 @@ footer p{font-size:12px;color:var(--muted2);line-height:1.75;}
 </section>
 
 <!-- PRICING -->
+
+<!-- NOT FOR YOU -->
+<section class="notforyou-section">
+  <div class="center">
+    <div class="section-tag">Transparență totală</div>
+    <h2 class="section-title">Black Edge e pentru tine?</h2>
+    <p class="section-sub">Îți spunem direct. Nu vrem clienți nemulțumiți — vrem traderi care obțin rezultate reale.</p>
+  </div>
+  <div class="nfy-grid">
+    <div class="nfy-col">
+      <div class="nfy-label no">Nu e pentru tine dacă</div>
+      <ul class="nfy-list no">
+        <li><span class="ni">✕</span>Vrei să te îmbogățești peste noapte fără efort</li>
+        <li><span class="ni">✕</span>Nu ești dispus să urmezi un sistem cu disciplină</li>
+        <li><span class="ni">✕</span>Tranzacționezi pe emoții și vrei să rămâi așa</li>
+        <li><span class="ni">✕</span>Cauți un robot care să facă totul automat fără implicare</li>
+        <li><span class="ni">✕</span>Nu ai timp să înveți și să aplici ce îți arătăm</li>
+      </ul>
+    </div>
+    <div class="nfy-col right">
+      <div class="nfy-label yes">E exact pentru tine dacă</div>
+      <ul class="nfy-list yes">
+        <li><span class="ni">—</span>Ești frustrat că pierzi la challenge-uri deși setup-urile par corecte</li>
+        <li><span class="ni">—</span>Vrei un sistem testat, cu reguli clare și fără ambiguitate</li>
+        <li><span class="ni">—</span>Tranzacționezi serios și vrei să tratezi asta ca un business</li>
+        <li><span class="ni">—</span>Ești dispus să înveți, să aplici și să ai răbdare cu procesul</li>
+        <li><span class="ni">—</span>Vrei să construiești ceva al tău, personalizat pe stilul tău</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <section id="pricing" class="pricing-section">
   <div class="center">
     <div class="section-tag">Planuri</div>
@@ -388,6 +494,21 @@ footer p{font-size:12px;color:var(--muted2);line-height:1.75;}
       <div class="pcard-tagline">Lucrăm direct cu tine să îți construiești propria strategie sau robot — de la zero, 100% personalizat.</div>
       <div class="pcard-price gold-price"><sup>$</sup>297</div>
       <div class="pcard-period">pe lună · locuri limitate</div>
+      <div class="countdown-wrap">
+        <div>
+          <div class="cd-label">Locuri disponibile luna aceasta</div>
+          <div class="cd-spots">Rămase: <span id="spots-left">3</span> din 10</div>
+          <div class="spots-bar"><div class="spots-fill" id="spots-bar-fill"></div></div>
+        </div>
+        <div class="cd-timer">
+          <div class="cd-unit"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">ore</div></div>
+          <div class="cd-sep">:</div>
+          <div class="cd-unit"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">min</div></div>
+          <div class="cd-sep">:</div>
+          <div class="cd-unit"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl">sec</div></div>
+        </div>
+      </div>
+
       <ul class="pcard-feats">
         <li>Tot ce include Pro</li>
         <li>Sesiuni 1:1 live cu expertul nostru</li>
@@ -419,28 +540,32 @@ footer p{font-size:12px;color:var(--muted2);line-height:1.75;}
   </div>
   <div class="faq-list">
     <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">Pe ce platformă funcționează Black Edge? <span class="faq-icon">+</span></button>
-      <div class="faq-a">Black Edge funcționează exclusiv pe TradingView. Ai nevoie de un cont TradingView — planul gratuit este suficient.</div>
+      <button class="faq-q" onclick="toggleFaq(this)">Am mai cumpărat indicatori și nu au funcționat. De ce ar fi diferit Black Edge? <span class="faq-icon">+</span></button>
+      <div class="faq-a">Majoritatea indicatorilor de pe piață sunt statici — odată publicați, nu se mai schimbă. Black Edge beneficiază de mentenanță zilnică: parametrii sunt ajustați zilnic la condițiile reale ale pieței. Plus că vine cu setări specifice per pereche, nu setări generice pentru toate piețele.</div>
     </div>
     <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">Pe ce perechi și timeframe-uri funcționează? <span class="faq-icon">+</span></button>
-      <div class="faq-a">Funcționează pe orice pereche — crypto, forex, indici, acțiuni. Oferim setări optimizate per pereche, pe timeframe-uri de la 15M până la Daily.</div>
+      <button class="faq-q" onclick="toggleFaq(this)">Cum știu că nu este un scam? <span class="faq-icon">+</span></button>
+      <div class="faq-a">Toate certificatele și payout-urile de pe site sunt reale și verificabile — emise de FTMO, FundedNext, BrightFunded, Goat Funded Trader și FundingPips. Oferim garanție completă de returnare în 7 zile, fără condiții. Dacă nu ești mulțumit, îți returnăm banii integral.</div>
     </div>
     <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">Cum se face mentenanța zilnică? <span class="faq-icon">+</span></button>
-      <div class="faq-a">Zilnic analizăm condițiile pieței și actualizăm parametrii strategiei. Primești întotdeauna setările cele mai recente, adaptate la ce face piața în ziua respectivă.</div>
+      <button class="faq-q" onclick="toggleFaq(this)">Funcționează și pentru conturi mici, nu doar prop firms? <span class="faq-icon">+</span></button>
+      <div class="faq-a">Da, absolut. Black Edge funcționează pe orice cont — personal, demo sau prop firm. Nu există un minim de capital. Logica strategiei se aplică indiferent de mărimea contului.</div>
     </div>
     <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">Ce înseamnă planul Elite — Mentorat? <span class="faq-icon">+</span></button>
-      <div class="faq-a">Lucrăm direct 1:1 cu tine prin sesiuni live pentru a-ți construi propriul robot sau strategie de trading în Pine Script, de la zero, adaptată exact pe stilul tău de trading. Este un mentorat complet, nu un curs video generic.</div>
+      <button class="faq-q" onclick="toggleFaq(this)">Cât timp îmi ia să înțeleg și să aplic indicatorul? <span class="faq-icon">+</span></button>
+      <div class="faq-a">Primești un ghid complet de utilizare și setările recomandate per pereche. Majoritatea utilizatorilor sunt operaționali în prima zi. Dacă ai întrebări, comunitatea din Discord și suportul 1:1 (planurile Pro și Elite) sunt disponibile oricând.</div>
     </div>
     <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">Cum primesc accesul după plată? <span class="faq-icon">+</span></button>
-      <div class="faq-a">Imediat după confirmare primești un email cu instrucțiunile de activare. Accesul se face prin username-ul tău de TradingView în mai puțin de 5 minute.</div>
+      <button class="faq-q" onclick="toggleFaq(this)">Ce înseamnă concret planul Elite — Mentorat 1:1? <span class="faq-icon">+</span></button>
+      <div class="faq-a">Lucrăm direct cu tine prin sesiuni live pentru a-ți construi propria strategie sau robot în Pine Script, de la zero, adaptată pe stilul tău de trading. Nu este un curs video generic — este mentorat personalizat unde tu ieși cu un sistem al tău, funcțional și testat.</div>
     </div>
     <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">Există garanție de returnare? <span class="faq-icon">+</span></button>
-      <div class="faq-a">Da. Garanție completă de returnare în primele 7 zile de la achiziție, fără nicio întrebare.</div>
+      <button class="faq-q" onclick="toggleFaq(this)">Pe ce platformă funcționează și cum primesc accesul? <span class="faq-icon">+</span></button>
+      <div class="faq-a">Black Edge funcționează pe TradingView — planul gratuit este suficient. Imediat după confirmare primești un email cu instrucțiunile de activare. Accesul se face prin username-ul tău de TradingView în mai puțin de 5 minute.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Pot anula abonamentul oricând? <span class="faq-icon">+</span></button>
+      <div class="faq-a">Da, fără condiții și fără costuri de anulare. Nu există contracte pe termen lung. Poți anula oricând trimițindu-ne un email, iar accesul rămâne activ până la sfârșitul perioadei plătite.</div>
     </div>
   </div>
 </section>
@@ -721,7 +846,7 @@ function submitForm() {
   );
 
   // Open mailto (sends to your email)
-  window.location.href = 'mailto:EMAIL_TAU@gmail.com?subject=' + subject + '&body=' + body;
+  window.location.href = 'mailto:lvlup.trading1@gmail.com?subject=' + subject + '&body=' + body;
 
   // Show success after short delay
   setTimeout(function() {
@@ -731,6 +856,55 @@ function submitForm() {
     document.getElementById('success-plan').textContent = selectedPlan + ' — ' + selectedPrice + '/lună';
   }, 800);
 }
+
+
+// ── TICKER ──
+var tickerData = [
+  {name:'Amuzan A.', firm:'FundedNext', amount:'$3,079.15', time:'acum 2h'},
+  {name:'Andrei R.', firm:'FTMO', amount:'Challenge passed', time:'acum 5h'},
+  {name:'Amuzan A.', firm:'GoatFundedTrader', amount:'$1,160.83', time:'acum 8h'},
+  {name:'Andrei R.', firm:'BrightFunded', amount:'$598.10', time:'ieri'},
+  {name:'Amuzan A.', firm:'FundedNext', amount:'$1,965.94', time:'ieri'},
+  {name:'Amuzan A.', firm:'GoatFundedTrader', amount:'$919.99', time:'acum 2 zile'},
+  {name:'Andrei A.', firm:'FundingPips', amount:'$890.08', time:'acum 2 zile'},
+  {name:'Amuzan A.', firm:'FundedNext', amount:'$778.98', time:'acum 3 zile'},
+  {name:'Andrei R.', firm:'BrightFunded', amount:'$461.52', time:'acum 4 zile'},
+  {name:'Amuzan A.', firm:'FundedNext', amount:'$710.10', time:'acum 5 zile'},
+];
+(function buildTicker(){
+  var track = document.getElementById('ticker-track');
+  if(!track) return;
+  var doubled = tickerData.concat(tickerData);
+  var html2 = doubled.map(function(t){
+    return '<div class="tick-item"><div class="tick-dot"></div><span class="tick-name">' + t.name + '</span><span style="color:var(--muted)">·</span><span>' + t.firm + '</span><span style="color:var(--muted)">·</span><span class="tick-amount">' + t.amount + '</span><span class="tick-time">' + t.time + '</span></div>';
+  }).join('');
+  track.innerHTML = html2;
+})();
+
+// ── COUNTDOWN (resets daily at midnight) ──
+(function startCountdown(){
+  var spotsEl = document.getElementById('spots-left');
+  var barEl = document.getElementById('spots-bar-fill');
+  var TOTAL = 10, LEFT = 3;
+  if(spotsEl) spotsEl.textContent = LEFT;
+  if(barEl) barEl.style.width = Math.round((LEFT/TOTAL)*100) + '%';
+
+  function tick(){
+    var now = new Date();
+    var midnight = new Date(now); midnight.setHours(23,59,59,999);
+    var diff = midnight - now;
+    var h = Math.floor(diff/3600000);
+    var m = Math.floor((diff%3600000)/60000);
+    var s = Math.floor((diff%60000)/1000);
+    var pad = function(n){return n<10?'0'+n:n;};
+    var hEl=document.getElementById('cd-h'), mEl=document.getElementById('cd-m'), sEl=document.getElementById('cd-s');
+    if(hEl) hEl.textContent = pad(h);
+    if(mEl) mEl.textContent = pad(m);
+    if(sEl) sEl.textContent = pad(s);
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
 
 // Close modal on ESC
 document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
