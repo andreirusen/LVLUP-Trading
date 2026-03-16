@@ -177,6 +177,46 @@ footer{padding:36px 6%;border-top:1px solid var(--goldborder2);display:flex;alig
 .footer-logo{font-size:16px;font-weight:800;letter-spacing:4px;text-transform:uppercase;}
 .footer-logo span{color:var(--gold);}
 footer p{font-size:12px;color:var(--muted2);line-height:1.75;}
+
+/* MODAL OVERLAY */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(6,6,8,0.92);z-index:500;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:#0c0c10;border:1px solid rgba(201,168,76,0.3);width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:modalIn .25s ease;}
+@keyframes modalIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.modal-hd{background:#121218;padding:22px 28px;border-bottom:1px solid rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1;}
+.modal-logo-sm{font-size:13px;font-weight:800;letter-spacing:3px;color:var(--white);}
+.modal-logo-sm span{color:var(--gold);}
+.modal-x{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;padding:0;transition:color .2s;}
+.modal-x:hover{color:var(--white);}
+.modal-body{padding:28px;}
+.modal-section-label{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.modal-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:28px;}
+.mplan{background:var(--black3);border:1px solid var(--goldborder2);padding:14px 10px;cursor:pointer;text-align:center;transition:all .2s;}
+.mplan:hover{border-color:var(--gold3);}
+.mplan.active{border-color:var(--gold);background:rgba(201,168,76,0.08);}
+.mplan-name{font-size:11px;font-weight:800;color:var(--white);letter-spacing:.3px;margin-bottom:4px;}
+.mplan-price{font-size:13px;font-weight:700;color:var(--gold);}
+.mplan-period{font-size:10px;color:var(--muted);margin-top:2px;}
+.mfield{margin-bottom:16px;}
+.mfield label{display:block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.mfield input,.mfield select,.mfield textarea{width:100%;background:var(--black3);border:1px solid rgba(245,240,232,0.1);color:var(--white);padding:12px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s;resize:none;}
+.mfield input:focus,.mfield select:focus,.mfield textarea:focus{border-color:rgba(201,168,76,0.5);}
+.mfield input::placeholder,.mfield textarea::placeholder{color:var(--muted2);}
+.mfield-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.modal-divider{border:none;border-top:1px solid rgba(245,240,232,0.06);margin:20px 0;}
+.msubmit{width:100%;background:var(--gold);color:var(--black);border:none;padding:16px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:4px;}
+.msubmit:hover{background:var(--gold2);transform:translateY(-1px);}
+.msubmit:disabled{background:var(--muted2);cursor:not-allowed;transform:none;}
+.modal-secure{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;font-size:11px;color:var(--muted2);letter-spacing:.5px;}
+.modal-pay-methods{display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap;}
+.mpm{background:var(--black3);border:1px solid var(--goldborder2);padding:4px 12px;font-size:10px;color:var(--muted2);letter-spacing:1px;text-transform:uppercase;}
+/* Success state */
+.modal-success{display:none;padding:48px 28px;text-align:center;}
+.modal-success.show{display:block;}
+.success-icon{width:56px;height:56px;background:rgba(201,168,76,0.1);border:1px solid var(--goldborder);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:24px;}
+.success-title{font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:10px;}
+.success-sub{font-size:14px;color:var(--muted);line-height:1.75;}
+.success-sub strong{color:var(--gold);}
 </style>
 </head>
 <body>
@@ -189,7 +229,7 @@ footer p{font-size:12px;color:var(--muted2);line-height:1.75;}
     <li><a href="#pricing">Planuri</a></li>
     <li><a href="#faq">FAQ</a></li>
   </ul>
-  <button class="nav-cta">Obține accesul</button>
+  <button class="nav-cta" onclick="openModal('Elite','$297')">Obține accesul</button>
 </nav>
 
 <!-- HERO -->
@@ -200,7 +240,7 @@ footer p{font-size:12px;color:var(--muted2);line-height:1.75;}
   <h1>Oprește să<br>pierzi bani<br><em>pe piețe</em></h1>
   <p class="hero-sub">Indicatorul pe care l-ai fi vrut de la început. Construit de un trader finanțat, testat pe 9+ ani de date istorice, cu rezultate documentate.</p>
   <div class="hero-btns">
-    <button class="btn-gold">Obține accesul acum →</button>
+    <button class="btn-gold" onclick="openModal('Elite','$297')">Obține accesul acum →</button>
     <button class="btn-ghost" onclick="document.getElementById('results').scrollIntoView({behavior:'smooth'})">Vezi dovezile</button>
   </div>
   <div class="hero-line"></div>
@@ -318,7 +358,7 @@ footer p{font-size:12px;color:var(--muted2);line-height:1.75;}
         <li>Ghid complet de utilizare</li>
         <li>Suport prin Discord</li>
       </ul>
-      <button class="pbtn outline">Începe cu Starter</button>
+      <button class="pbtn outline" onclick="openModal('Starter','$49')">Începe cu Starter</button>
     </div>
 
     <!-- PRO -->
@@ -337,7 +377,7 @@ footer p{font-size:12px;color:var(--muted2);line-height:1.75;}
         <li>Suport prioritar 1:1</li>
         <li>Acces grup VIP Discord</li>
       </ul>
-      <button class="pbtn outline">Alege Pro</button>
+      <button class="pbtn outline" onclick="openModal('Pro','$97')">Alege Pro</button>
     </div>
 
     <!-- ELITE — FEATURED -->
@@ -357,7 +397,7 @@ footer p{font-size:12px;color:var(--muted2);line-height:1.75;}
         <li>Backtesting & optimizare ghidată</li>
         <li>Acces pe viață la materialele cursului</li>
       </ul>
-      <button class="pbtn solid">Aplică pentru Elite →</button>
+      <button class="pbtn solid" onclick="openModal('Elite','$297')">Aplică pentru Elite →</button>
     </div>
 
   </div>
@@ -410,7 +450,7 @@ footer p{font-size:12px;color:var(--muted2);line-height:1.75;}
   <div class="cta-line"></div>
   <h2>Oprește să îți<br><em>repeți greșelile.</em></h2>
   <p>Alătură-te traderilor care tranzacționează cu un avantaj real.</p>
-  <button class="btn-gold" style="font-size:14px;padding:17px 52px;letter-spacing:1px;">Obține accesul acum →</button>
+  <button class="btn-gold" style="font-size:14px;padding:17px 52px;letter-spacing:1px;" onclick="openModal('Elite','$297')">Obține accesul acum →</button>
 </div>
 
 <footer>
@@ -524,6 +564,177 @@ function toggleFaq(btn) {
 }
 
 buildCarousel();
+</script>
+
+<!-- CONTACT MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+  <div class="modal-box" id="modal-box">
+
+    <div class="modal-hd">
+      <div class="modal-logo-sm">BLACK<span> EDGE</span></div>
+      <button class="modal-x" onclick="closeModal()">×</button>
+    </div>
+
+    <!-- FORM VIEW -->
+    <div id="modal-form-view" class="modal-body">
+      <div class="modal-section-label">Selectează planul</div>
+      <div class="modal-plans">
+        <div class="mplan" id="mp-Starter" onclick="switchPlan('Starter','$49')">
+          <div class="mplan-name">Starter</div>
+          <div class="mplan-price">$49</div>
+          <div class="mplan-period">pe lună</div>
+        </div>
+        <div class="mplan" id="mp-Pro" onclick="switchPlan('Pro','$97')">
+          <div class="mplan-name">Pro</div>
+          <div class="mplan-price">$97</div>
+          <div class="mplan-period">pe lună</div>
+        </div>
+        <div class="mplan active" id="mp-Elite" onclick="switchPlan('Elite','$297')">
+          <div class="mplan-name">Elite</div>
+          <div class="mplan-price">$297</div>
+          <div class="mplan-period">pe lună</div>
+        </div>
+      </div>
+
+      <div class="mfield">
+        <label>Nume complet</label>
+        <input type="text" id="m-name" placeholder="ex: Andrei Rusen">
+      </div>
+      <div class="mfield">
+        <label>Adresă email</label>
+        <input type="email" id="m-email" placeholder="adresa@email.com">
+      </div>
+      <div class="mfield">
+        <label>Username TradingView</label>
+        <input type="text" id="m-tv" placeholder="@username_tradingview">
+      </div>
+      <div class="mfield">
+        <label>Metodă de plată preferată</label>
+        <select id="m-pay">
+          <option value="">— Alege metoda de plată —</option>
+          <option value="Card bancar">Card bancar</option>
+          <option value="PayPal">PayPal</option>
+          <option value="Bitcoin">Bitcoin</option>
+          <option value="USDT">USDT / Crypto</option>
+          <option value="Transfer bancar">Transfer bancar</option>
+        </select>
+      </div>
+      <div class="mfield">
+        <label>Mesaj (opțional)</label>
+        <textarea id="m-msg" rows="3" placeholder="Întrebări, detalii suplimentare..."></textarea>
+      </div>
+
+      <div id="m-error" style="font-size:13px;color:#e8605a;margin-bottom:12px;display:none;"></div>
+
+      <button class="msubmit" id="m-submit" onclick="submitForm()">Trimite cererea — <span id="m-price-label">$297</span>/lună</button>
+
+      <div class="modal-secure">🔒 Date în siguranță · Garanție 7 zile · Fără contracte</div>
+      <div class="modal-pay-methods">
+        <div class="mpm">Card</div>
+        <div class="mpm">Bitcoin</div>
+        <div class="mpm">USDT</div>
+        <div class="mpm">PayPal</div>
+        <div class="mpm">Transfer</div>
+      </div>
+    </div>
+
+    <!-- SUCCESS VIEW -->
+    <div class="modal-success" id="modal-success-view">
+      <div class="success-icon">✓</div>
+      <div class="success-title">Cerere trimisă!</div>
+      <p class="success-sub">
+        Te contactăm în maxim <strong>24 de ore</strong> la adresa de email introdusă cu detaliile de plată și instrucțiunile de activare.<br><br>
+        Plan ales: <strong id="success-plan">Elite — $297/lună</strong>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+// MODAL LOGIC
+var selectedPlan = 'Elite';
+var selectedPrice = '$297';
+
+function openModal(plan, price) {
+  selectedPlan = plan || 'Elite';
+  selectedPrice = price || '$297';
+  switchPlan(selectedPlan, selectedPrice);
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('modal-form-view').style.display = 'block';
+  document.getElementById('modal-success-view').classList.remove('show');
+  document.getElementById('m-error').style.display = 'none';
+  document.getElementById('m-submit').disabled = false;
+  document.getElementById('m-submit').textContent = 'Trimite cererea — ' + selectedPrice + '/lună';
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modal')) closeModal();
+}
+
+function switchPlan(plan, price) {
+  selectedPlan = plan;
+  selectedPrice = price;
+  document.querySelectorAll('.mplan').forEach(function(p){ p.classList.remove('active'); });
+  var el = document.getElementById('mp-' + plan);
+  if (el) el.classList.add('active');
+  var lbl = document.getElementById('m-price-label');
+  if (lbl) lbl.textContent = price;
+  var btn = document.getElementById('m-submit');
+  if (btn && !btn.disabled) btn.textContent = 'Trimite cererea — ' + price + '/lună';
+}
+
+function submitForm() {
+  var name = document.getElementById('m-name').value.trim();
+  var email = document.getElementById('m-email').value.trim();
+  var tv = document.getElementById('m-tv').value.trim();
+  var pay = document.getElementById('m-pay').value;
+  var err = document.getElementById('m-error');
+
+  if (!name) { err.textContent = 'Te rugăm completează numele complet.'; err.style.display='block'; return; }
+  if (!email || !email.includes('@')) { err.textContent = 'Te rugăm completează o adresă de email validă.'; err.style.display='block'; return; }
+  if (!tv) { err.textContent = 'Te rugăm completează username-ul tău de TradingView.'; err.style.display='block'; return; }
+  if (!pay) { err.textContent = 'Te rugăm selectează metoda de plată preferată.'; err.style.display='block'; return; }
+
+  err.style.display = 'none';
+  var btn = document.getElementById('m-submit');
+  btn.disabled = true;
+  btn.textContent = 'Se trimite...';
+
+  // Build mailto link as fallback — works without backend
+  var msg = document.getElementById('m-msg').value.trim();
+  var subject = encodeURIComponent('Black Edge — Cerere ' + selectedPlan + ' (' + selectedPrice + ')');
+  var body = encodeURIComponent(
+    'Plan selectat: ' + selectedPlan + ' — ' + selectedPrice + '/luna\n' +
+    'Nume: ' + name + '\n' +
+    'Email: ' + email + '\n' +
+    'TradingView: ' + tv + '\n' +
+    'Metoda de plata: ' + pay + '\n' +
+    (msg ? 'Mesaj: ' + msg : '')
+  );
+
+  // Open mailto (sends to your email)
+  window.location.href = 'mailto:EMAIL_TAU@gmail.com?subject=' + subject + '&body=' + body;
+
+  // Show success after short delay
+  setTimeout(function() {
+    document.getElementById('modal-form-view').style.display = 'none';
+    var sv = document.getElementById('modal-success-view');
+    sv.classList.add('show');
+    document.getElementById('success-plan').textContent = selectedPlan + ' — ' + selectedPrice + '/lună';
+  }, 800);
+}
+
+// Close modal on ESC
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+
 </script>
 </body>
 </html>
